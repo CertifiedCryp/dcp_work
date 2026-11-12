@@ -9,6 +9,11 @@ Labels are tracked both as recorded (estimated) and true values, so Fourier-samp
 Parameters default to the proof's values; `scale` overrides shrink them for larger N (logic check only)."""
 import math, numpy as np
 
+def mulmod(x, y, N):
+    """(x*y) mod N for int64 arrays/ints without overflow (object dtype once N^2 exceeds int64)."""
+    if N < 1 << 31: return (x * y) % N
+    return ((np.asarray(x).astype(object) * np.asarray(y).astype(object)) % N).astype(np.int64)
+
 def isqrt_ceil(n): r = math.isqrt(n); return r if r * r == n else r + 1
 def clog2(x): return (x - 1).bit_length()             # ceil(log2 x), x >= 1
 
@@ -64,7 +69,7 @@ def fourier_sample(N, cnt, P, rng, chunk=1 << 20):
         return np.concatenate([a for a, _ in parts]), np.concatenate([b for _, b in parts])
     n = P['n']; l = rng.integers(0, N, size=cnt, dtype=np.int64)
     pw = np.array([pow(2, j, N) for j in range(n + 1)], dtype=np.int64)
-    phi = np.mod((l[:, None] * pw[None, :]) % N / N, 1.0)
+    phi = mulmod(l[:, None], pw[None, :], N) / N
     alphas = octant(*tests(phi, P['tF'], rng), P['tF'])
     est = np.rint(N * chain(alphas, 2)).astype(np.int64) % N
     return est, l
@@ -78,14 +83,14 @@ def frame(N, s, j, P, rng, stats):
         for i in range(p + 1):
             cnt = 2 ** (p + 5) * t; stats['Q'] += cnt
             rec, tru = fourier_sample(N, cnt, P, rng)
-            sel = (a * rec) % N == (-(2 ** i)) % N
+            sel = mulmod(a, rec, N) == (-(2 ** i)) % N
             if sel.sum() < 2 * t: return None
             out[i] = (-tru[sel])[:2 * t] % N                  # X-flip negates the label
         return out
     cnt = 4 * P['M0']; stats['Q'] += cnt
     rec, tru = fourier_sample(N, cnt, P, rng)
     stats['mislabel'] += int((rec != tru).sum())
-    u = (a * rec) % N
+    u = mulmod(a, rec, N)
     r = P['r']; keep = u < (1 << r)
     if keep.sum() < P['M0']: return None
     lab, tl = u[keep][:P['M0']], tru[keep][:P['M0']]
@@ -121,7 +126,7 @@ def run(N, s, P, rng):
         al = []
         for i in range(p + 1):
             tl = out[i]
-            phi = np.mod((tl * s) % N / N, 1.0)
+            phi = mulmod(tl, s, N) / N
             cp = rng.binomial(1, (1 + np.cos(2 * np.pi * phi[:t])) / 2).sum()
             sp = rng.binomial(1, (1 + np.sin(2 * np.pi * phi[t:2 * t])) / 2).sum()
             al.append(octant(np.array(cp), np.array(sp), t))
