@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "title": "Unit-frame interval sieve: O(n^4 2^((9/2) sqrt n)) DCP for every N",
+  "claims": [
+    {
+      "statement": "For every N >= 2 and every s in Z/NZ, the unit-frame interval sieve UFIS-9/2 of proof.md (b = ceil(2 sqrt n) and all constants as in its Section 1), with n = ceil(log2 N), recovers the entire s with unconditional probability > 3/4. In the challenge model its worst-case total work is T(N,s) = O(n^4 2^((9/2) sqrt(n))), with an absolute hidden constant and the explicit exponent coefficient 9/2; the envelope B_T(n) = 2^((9/2) n^(1/2)) n^4 has growth index exactly 1/2. This holds jointly with the other three resource bounds, on every execution branch (fixed copy counts, no restarts; aborts only stop early), and with unconditional full-secret success probability > 3/4.",
+      "score": {
+        "numerator": "1",
+        "denominator": "2"
+      },
+      "evidence": [
+        "proof.md"
+      ],
+      "structured": {
+        "version": "dcp-bounds-v4",
+        "comparator": "asymptotic-v1",
+        "scope": "dcp-cyclic-group-order",
+        "model": "dcp-uniform-clifford-t-bit-operations-v1",
+        "notation": "big-o",
+        "bound": {
+          "coefficient": "1",
+          "exponent": [
+            {
+              "coefficient": "9/2",
+              "nPower": "1/2",
+              "logPower": "0"
+            }
+          ],
+          "nPower": "4",
+          "logPower": "0"
+        }
+      }
+    },
+    {
+      "statement": "For the unit-frame interval sieve UFIS-9/2 of proof.md (b = ceil(2 sqrt n) and all constants as in its Section 1), with n = ceil(log2 N), for every N >= 2 and every s in Z/NZ, worst-case peak classical workspace is S_C(N,s) = O(n 2^((9/2) sqrt(n))) bits, absolute hidden constant. The envelope B_C(n) = 2^((9/2) n^(1/2)) n has growth index exactly 1/2. This holds jointly with the other three resource bounds, on every execution branch (fixed copy counts, no restarts; aborts only stop early), and with unconditional full-secret success probability > 3/4.",
+      "score": {
+        "numerator": "1",
+        "denominator": "2"
+      },
+      "evidence": [
+        "proof.md"
+      ],
+      "structured": {
+        "version": "dcp-bounds-v4",
+        "comparator": "asymptotic-v1",
+        "scope": "dcp-cyclic-group-order",
+        "model": "dcp-uniform-clifford-t-bit-operations-v1",
+        "notation": "big-o",
+        "bound": {
+          "coefficient": "1",
+          "exponent": [
+            {
+              "coefficient": "9/2",
+              "nPower": "1/2",
+              "logPower": "0"
+            }
+          ],
+          "nPower": "1",
+          "logPower": "0"
+        }
+      }
+    },
+    {
+      "statement": "For the unit-frame interval sieve UFIS-9/2 of proof.md (b = ceil(2 sqrt n) and all constants as in its Section 1), with n = ceil(log2 N), for every N >= 2 and every s in Z/NZ, worst-case peak quantum workspace is S_Q(N,s) = O(2^((9/2) sqrt(n))) qubits, absolute hidden constant. The envelope B_Q(n) = 2^((9/2) n^(1/2)) has growth index exactly 1/2. This holds jointly with the other three resource bounds, on every execution branch (fixed copy counts, no restarts; aborts only stop early), and with unconditional full-secret success probability > 3/4.",
+      "score": {
+        "numerator": "1",
+        "denominator": "2"
+      },
+      "evidence": [
+        "proof.md"
+      ],
+      "structured": {
+        "version": "dcp-bounds-v4",
+        "comparator": "asymptotic-v1",
+        "scope": "dcp-cyclic-group-order",
+        "model": "dcp-uniform-clifford-t-bit-operations-v1",
+        "notation": "big-o",
+        "bound": {
+          "coefficient": "1",
+          "exponent": [
+            {
+              "coefficient": "9/2",
+              "nPower": "1/2",
+              "logPower": "0"
+            }
+          ],
+          "nPower": "0",
+          "logPower": "0"
+        }
+      }
+    },
+    {
+      "statement": "For the unit-frame interval sieve UFIS-9/2 of proof.md (b = ceil(2 sqrt n) and all constants as in its Section 1), with n = ceil(log2 N), for every N >= 2 and every s in Z/NZ, the total number of fresh DCP source copies acquired on every execution branch is Q(N,s) <= 4 m M_0 (or m(p+1)2^(p+5)t in the bounded-n case d = 0) = O(n 2^((9/2) sqrt(n))), including all discarded copies. The envelope B_samples(n) = 2^((9/2) n^(1/2)) n has growth index exactly 1/2. This holds jointly with the other three resource bounds, on every execution branch (fixed copy counts, no restarts; aborts only stop early), and with unconditional full-secret success probability > 3/4.",
+      "score": {
+        "numerator": "1",
+        "denominator": "2"
+      },
+      "evidence": [
+        "proof.md"
+      ],
+      "structured": {
+        "version": "dcp-bounds-v4",
+        "comparator": "asymptotic-v1",
+        "scope": "dcp-cyclic-group-order",
+        "model": "dcp-uniform-clifford-t-bit-operations-v1",
+        "notation": "big-o",
+        "bound": {
+          "coefficient": "1",
+          "exponent": [
+            {
+              "coefficient": "9/2",
+              "nPower": "1/2",
+              "logPower": "0"
+            }
+          ],
+          "nPower": "1",
+          "logPower": "0"
+        }
+      }
+    },
+    {
+      "statement": "For the same algorithm UFIS-9/2 and configuration in proof.md, the proved fractional error tolerance is epsilon(n)=0: all Q source copies are independent ideal coset states. Under this promise, for every N and s, full-secret recovery succeeds with probability > 3/4 jointly with all four resource bounds. No positive corruption tolerance is asserted; this is not a proof that greater tolerance is impossible.",
+      "evidence": [
+        "proof.md"
+      ],
+      "structured": {
+        "version": "dcp-fractional-error-tolerance-v1",
+        "expression": "0",
+        "error_model": "Malformed fraction among acquired copies. The proved guarantee requires every copy to be an independent ideal coset state; no behavior is promised for malformed copies."
+      }
+    }
+  ],
+  "experiments": []
+}
