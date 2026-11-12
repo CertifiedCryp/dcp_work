@@ -12,7 +12,7 @@ import math, numpy as np
 def mulmod(x, y, N):
     """(x*y) mod N for int64 arrays/ints without overflow (object dtype once N^2 exceeds int64)."""
     if N < 1 << 31: return (x * y) % N
-    return ((np.asarray(x).astype(object) * np.asarray(y).astype(object)) % N).astype(np.int64)
+    return np.asarray((np.asarray(x).astype(object) * np.asarray(y).astype(object)) % N).astype(np.int64)
 
 def isqrt_ceil(n): r = math.isqrt(n); return r if r * r == n else r + 1
 def clog2(x): return (x - 1).bit_length()             # ceil(log2 x), x >= 1
