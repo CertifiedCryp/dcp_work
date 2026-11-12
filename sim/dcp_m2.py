@@ -102,7 +102,7 @@ def frame(N, s, j, P, rng, stats):
         ok = rng.random(v.size) < 0.5
         ok &= (v >= -(W // 2)) & (v < W // 2)
         ok &= rng.random(v.size) < (W / 2) / (W - np.abs(v))
-        M //= 32
+        M //= P.get('yield', 32)
         if ok.sum() < M: return None
         lab, tl = v[ok][:M], tv[ok][:M]; lo, rho = -(W // 2), rho - bb
     for i in range(p + 1):
@@ -133,18 +133,18 @@ if __name__ == '__main__':
     import sys
     rng = np.random.default_rng(7)
     print("-- exact proof parameters --")
-    for N, T in [(2, 20), (3, 20), (5, 20), (6, 20), (12, 20), (30, 20), (64, 5), (210, 3)]:
+    exact = [] if '--reduced-only' in sys.argv else [(2, 20), (3, 20), (5, 20), (6, 20), (12, 20), (30, 20), (64, 5), (210, 3)]
+    for N, T in exact:
         P = params(N); ok = 0; mis = 0
         for _ in range(T):
             s = int(rng.integers(N)); est, st = run(N, s, P, rng); ok += est == s; mis += st['mislabel']
         print(N, {k: P[k] for k in 'g p m b d t Md Q tF'.split()}, f"success {ok}/{T} mislabels {mis}", flush=True)
-    print("-- reduced t, M_d (sieve/reconstruction logic at larger N; not the proof's constants) --")
+    print("-- reduced t, M_d, per-level yield 1/9 (sieve/reconstruction logic at larger N; not the proof's constants) --")
     for N in [1001, 4096, 30030, 65521, 2**20, 999983, 510510, 2**24 - 3]:
-        P = params(N, t_override=24, md_override=3 * 2 ** (P0 := params(N))['p'] * 24)
-        P['tF'] = 64
-        ok = 0; T = 10; fails = 0
+        P = params(N, t_override=24)
+        P['Md'] = max(8 * 2 ** P['p'] * 24, 2 ** (P['b'] + 1)); P['tF'] = 64; P['yield'] = 9
+        P['M0'] = P['Md'] * 9 ** P['d']
+        ok = fails = 0; T = 10
         for _ in range(T):
-            s = int(rng.integers(N))
-            P2 = dict(P); P2['M0'] = int(P['Md'] * 9 ** P['d'])   # observed per-level yield ~1/7.5 > 1/9
-            est, st = run(N, s, P2, rng); ok += est == s; fails += est is None
-        print(N, {k: P[k] for k in 'g p m b d'.split()}, f"success {ok}/{T} aborts {fails}", flush=True)
+            s = int(rng.integers(N)); est, st = run(N, s, P, rng); ok += est == s; fails += est is None
+        print(N, {k: P[k] for k in 'g p m b d M0'.split()}, f"success {ok}/{T} aborts {fails}", flush=True)
